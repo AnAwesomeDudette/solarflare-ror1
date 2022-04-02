@@ -9,4 +9,6 @@ require("Items/shades") --
 require("Items/walnut") --
 require("Items/pierce") --
 require("Items/gland") --
+require("Items/swordlogic") --
+
 require("Elites/sunkissed") --
