@@ -13,8 +13,9 @@ swordlogic:setLog{
 	date = "N/A"
 }
 
-local sprSword = Sprite.load("Resources/Sprites/swordlogic_idle", 1, 4, 7)
-local sprSwing = Sprite.load("Resources/Sprites/swordlogic_swing", 5, 24, 35)
+local sprSword = Sprite.load("SwordLogicIdle", "Resources/Sprites/swordlogic_idle", 1, 4, 7)
+local sprSwing1 = Sprite.load("SwordLogicSwing1", "Resources/Sprites/swordlogic_swing", 5, 24, 35)
+local sprSwing2 = Sprite.load("SwordLogicSwing2", "Resources/Sprites/swordlogic_swingalt", 5, 28, 11)
 
 objSwordLogic = Object.new("Sword Logic")
 objSwordLogic.sprite = sprSword
@@ -27,6 +28,7 @@ objSwordLogic:addCallback("create", function(self)
 	self:getData().xOffset = 0
 	self:getData().yOffset = 0
 	self:getData().yTrueOffset = 0
+	self:getData().lifetime = 1
 end)
 
 objSwordLogic:addCallback("step", function(self)
@@ -80,6 +82,8 @@ objSwordLogic:addCallback("step", function(self)
 		end
 		--[[END CUSTOM SUBIMAGE HANDLER]]
 		
+		selfData.lifetime = selfData.lifetime + 1
+		
 		local function movement(noTrack, perfect)
 			local dir = -1
 			
@@ -111,14 +115,24 @@ objSwordLogic:addCallback("step", function(self)
 		
 		if selfData.state == "idle" then
 			if selfData.parent:get("activity") >= 2 and selfData.parent:get("activity") <= 5 then
-				selfData.state = "primary"
+				if selfData.lifetime % 2 == 0 then
+					selfData.state = "primary"
+				else
+					selfData.state = "secondary"
+				end
 			else
 				self.xscale = selfData.parent.xscale
 				movement(false)
 			end
 		end
+		local function instantMove()
+			local x = selfData.parent.x + (12*-1*self.xscale) + selfData.xOffset
+			local y = selfData.parent.y - 7
+			self.x = x
+			self.y = y + selfData.yTrueOffset
+		end
 		if selfData.state == "primary" then
-			local sprite = sprSwing
+			local sprite = sprSwing1
 			setCustomAnim(sprite, 0.25, 1--[[selfData.parent:get("attack_speed")]])
 			movement(true, true)
 			
@@ -126,10 +140,12 @@ objSwordLogic:addCallback("step", function(self)
 				self.xscale = selfData.parent.xscale
 				selfData.xOffset = 17*self.xscale
 				selfData.yTrueOffset = 8
+				
+				instantMove()
 			end
 			
 			if relevantFrame == 3 then
-				local bullet = selfData.parent:fireExplosion(self.x+15*self.xscale, self.y-10*self.yscale, 30/19, 20/4, 0.6, nil, nil, DAMAGER_NO_PROC)
+				local bullet = selfData.parent:fireExplosion(self.x+10*self.xscale, self.y-18*self.yscale, 26/19, 15/4, 0.6, nil, nil, DAMAGER_NO_PROC)
 				--bullet:set("knockback", 4)
 				--bullet:set("knockup", 3)
 				--bullet:set("knockback_direction", self.xscale)
@@ -138,6 +154,30 @@ objSwordLogic:addCallback("step", function(self)
 				
 				--local sound = sSlash["1"]
 				--sPlay(sound, self, 1.2, 0.9)
+			end
+			
+			if selfData.subimage == 0 and (selfData.parent:get("activity") <= 2 or selfData.parent:get("activity") >= 5) then
+				doIdle(true)
+				selfData.xOffset = 0
+				selfData.yTrueOffset = 0
+			end
+		elseif selfData.state == "secondary" then
+			local sprite = sprSwing2
+			setCustomAnim(sprite, 0.25, 1--[[selfData.parent:get("attack_speed")]])
+			movement(true, true)
+			
+			if relevantFrame == 1 then
+				self.xscale = selfData.parent.xscale
+				selfData.xOffset = 20*self.xscale
+				selfData.yTrueOffset = -4
+				
+				instantMove()
+			end
+			
+			if relevantFrame == 3 then
+				local bullet = selfData.parent:fireExplosion(self.x+2*self.xscale, self.y+5*self.yscale, 30/19, 8/4, 0.6, nil, nil, DAMAGER_NO_PROC)
+				bullet:set("knockback_direction", self.xscale)
+				bullet:getData().logic = true
 			end
 			
 			if selfData.subimage == 0 and (selfData.parent:get("activity") <= 2 or selfData.parent:get("activity") >= 5) then
@@ -200,7 +240,7 @@ archDebug = true
 if archDebug then
 callback.register("onPlayerInit", function(player)
 	
-	player:getData().timeBeforeSkatebordPogger = 1*60
+	player:getData().timeBeforeSkatebordPogger = 10*60
 	player:getData().GaveUASkatebordPoggersPoggers = false
 	
 end)
