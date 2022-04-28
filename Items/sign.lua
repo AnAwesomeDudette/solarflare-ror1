@@ -13,7 +13,8 @@ callback.register("preHit",function(damager,hit)
         if isa(parent,"PlayerInstance") and parent:countItem(sign)>0 then
             if math.chance(4+8*parent:countItem(sign))then
                 hit:applyBuff(shocked,240)
-                hit:getData().shockDamage=parent:get("damage")*0.4
+                hit:getData().shockDamage=parent:get("damage")*0.55
+                hit:getData().shockCt = 0
             end
         end
     end
@@ -31,7 +32,8 @@ shocked:addCallback("step",function(actor,step)
             end
         end
     end
-    if step%20==0 then
+    if step%8==0 and actor:getData().shockCt < 7 then
+        actor:getData().shockCt = actor:getData().shockCt + 1
         actor:set("hp",actor:get("hp")-actor:getData().shockDamage)
         misc.damage(actor:getData().shockDamage,actor.x+math.random(-15,15),actor.y-20+math.random(-15,15),false,Color.BLUE)
     end

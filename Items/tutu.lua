@@ -30,7 +30,9 @@ end,-300)
 function critThing(handler,frame)
     if frame > handler:getData().duration then
         handler:getData().player:set("critical_chance",handler:getData().player:get("critical_chance")-7)
-       
+        graphics.color(Color.RED)
+        graphics.alpha(0.3)
+        graphics.circle(handler:getData().player.x,handler:getData().player.y,critical_chance*math.random())
         handler:destroy()
     end
 
