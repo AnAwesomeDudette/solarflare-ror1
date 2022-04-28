@@ -30,7 +30,7 @@ bleed:addCallback("destroy",function(self)
 end)
 
 
-bloodEffect = Sprite.load("Resources/Sprites/bloodbadeffect.png",6,12,12)
+bloodEffect = Sprite.load("Resources/Sprites/bloodbageffect.png",6,12,12)
 
 callback.register("postStep", function()
 	for _, dot in ipairs(Object.find("DOT"):findAll()) do
@@ -46,7 +46,7 @@ callback.register("postStep", function()
                 local dotObj = Object.findInstance(dot:get("parent"))
                 if dotObj ~= nil then
                     dotObj:set("armor",dotObj:get("armor")-5*totalNeedles)
-                    local s = obj.EfSparks:create(self.x, self.y + 16)
+                    local s = obj.EfSparks:create(dotObj.x, dotObj.y + 16)
 		            s.sprite = bloodEffect
                 end
             end
