@@ -42,7 +42,7 @@ stunned = Buff("Stunned")
 stunned.sprite = Sprite.load("Resources/Sprites/stunBuff.png",7,3,8)
 stunned.frameSpeed=0.5
 stunned:addCallback("start",function(actor)
-    actor:getData().pastSpeed=actor:get("pHmax") --that's scawy
+    actor:getData().pastSpeed=actor:get("pHmax") --that's scawy --yeah it also works.
     actor:set("pHmax",0) --fear ???
     actor:set("stunned",1)
 end)
