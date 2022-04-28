@@ -29,6 +29,9 @@ bleed:addCallback("destroy",function(self)
     --log("Increased armor by "..5*totalNeedles)
 end)
 
+
+bloodEffect = Sprite.load("Resources/Sprites/bloodbadeffect.png",6,12,12)
+
 callback.register("postStep", function()
 	for _, dot in ipairs(Object.find("DOT"):findAll()) do
 		if not dot:getData().hasReducedArmor then
@@ -43,6 +46,8 @@ callback.register("postStep", function()
                 local dotObj = Object.findInstance(dot:get("parent"))
                 if dotObj ~= nil then
                     dotObj:set("armor",dotObj:get("armor")-5*totalNeedles)
+                    local s = obj.EfSparks:create(self.x, self.y + 16)
+		            s.sprite = bloodEffect
                 end
             end
             --log("Reduced armor by "..5*totalNeedles)

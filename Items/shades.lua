@@ -9,7 +9,7 @@ shades:setTier("common")
 callback.register("preHit",function(damager,hit)
     if isa(hit,"PlayerInstance") then --i dont really enjoy making player-exclusive items,,,,,
 		--hi past ash ! yeah why would you do that 
-        if damager:get("damage")>hit:get("maxhp_base")*0.03 then
+        if damager:get("damage")>hit:get("maxhp_base")*0.03 then -- hey thanks for redoing the item, now i cant fucking understand the code
            
             local count = hit:countItem(shades)
             if count>0 then

@@ -1,5 +1,5 @@
-local tutu = Item("Bloody Tutu")
-tutu.sprite=Sprite.load("Resources/Sprites/tutu.png",1,16,8)
+local tutu = Item("Purification Beads")
+tutu.sprite=Sprite.load("Resources/Sprites/beads.png",1,10,11)
 tutu.pickupText="Applying bleed gives you a critical hit chance increase."
 tutu:setTier("uncommon")
 tutu:setLog{
